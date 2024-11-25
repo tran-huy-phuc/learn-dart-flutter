@@ -1,0 +1,4 @@
+enum LiftAnimationDirection {
+  up,
+  down
+}

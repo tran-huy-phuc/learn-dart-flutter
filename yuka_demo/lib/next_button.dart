@@ -8,7 +8,7 @@ class NextButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LiftAnimatedBuilder(
-        animationDuration: (liftAnimationDuration * 1.5).toInt(),
+        animationDuration: (liftAnimationDuration * 1.3).toInt(),
         child: FilledButton(
             onPressed: () {},
             child: Padding(

@@ -54,7 +54,6 @@ class WordBoardViewModel extends ChangeNotifier {
         notifyListeners();
       }
     }
-    print('Selected cells count: ${selectedCells.length}');
   }
 
   bool checkWord() {
@@ -65,7 +64,6 @@ class WordBoardViewModel extends ChangeNotifier {
         .toList()
         .join('');
 
-    print(selectedWord == hiddenWord);
     if (selectedWord != hiddenWord) {
       selectedCells.clear();
       notifyListeners();

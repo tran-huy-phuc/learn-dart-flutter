@@ -2,12 +2,8 @@ class WordBoardCell {
   final int column;
   final int row;
   String? letter; // final double posX;
-  // final double posY;
 
-  WordBoardCell({this.column = -1, this.row = -1
-      // this.posX = -1,
-      // this.posY = -1
-      });
+  WordBoardCell({this.column = -1, this.row = -1});
 
   @override
   bool operator ==(Object other) =>

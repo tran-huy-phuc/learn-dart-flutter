@@ -6,7 +6,7 @@ import 'package:wordboard/word_board_cell.dart';
 import 'package:wordboard/word_board_view_model.dart';
 
 class WordBoard extends StatefulWidget {
-  const WordBoard({Key? key}) : super(key: key);
+  const WordBoard({super.key});
 
   @override
   State<WordBoard> createState() => _WordBoardState();

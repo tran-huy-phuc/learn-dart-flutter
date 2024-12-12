@@ -6,3 +6,4 @@ const int cellMargin = 5;
 const double cellBorderRadius = 12;
 const double connectedPathWidth = 6;
 const double connectedDotRadius = 6;
+const String defaultHiddenWord = 'Hello';

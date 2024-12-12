@@ -76,6 +76,8 @@ class WordBoardViewModel extends ChangeNotifier {
       {required int boardRow,
       required int boardColumn,
       required String hiddenWord}) {
+    _cells.clear();
+    selectedCells.clear();
     _createEmptyBoardCells(boardRow: boardRow, boardColumn: boardColumn);
     _placeTheHiddenWord(
         boardRow: boardRow, boardColumn: boardColumn, hiddenWord: hiddenWord);

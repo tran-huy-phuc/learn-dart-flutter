@@ -14,19 +14,14 @@ class WordBoard extends StatefulWidget {
 class _WordBoardState extends State<WordBoard> {
   // late List<String> letters;
   WordBoardViewModel workBoardViewModel = WordBoardViewModel();
+  TextEditingController controller =
+      TextEditingController(text: defaultHiddenWord);
 
   @override
   void initState() {
     super.initState();
     onWidgetBuildDone(() {
-      final double screenWidth = getScreenWidth(context);
-      final boardWidth = (screenWidth - wordBoardMargin * 2);
-      final double cellSize = boardWidth / wordBoardColumn;
-      workBoardViewModel.init(
-          boardRow: wordBoardRow,
-          boardColumn: wordBoardColumn,
-          cellSize: cellSize,
-          hiddenWord: 'hello'.toUpperCase());
+      _generateWordBoard();
     });
   }
 
@@ -45,8 +40,10 @@ class _WordBoardState extends State<WordBoard> {
           final double boardHeight = cellWidth * wordBoardRow;
 
           return Column(
+            spacing: 20,
             mainAxisSize: MainAxisSize.min,
             children: [
+              // const SizedBox(height: 20,),
               GestureDetector(
                   onPanStart: _onPanStart,
                   onPanUpdate: _onPanUpdate,
@@ -61,6 +58,24 @@ class _WordBoardState extends State<WordBoard> {
                       // path: []
                     ),
                   )),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: TextField(
+                  controller: controller,
+                  onChanged: (text) {},
+                  enabled: true,
+                  decoration:
+                      const InputDecoration(hintText: 'Enter a hidden word...'),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: ElevatedButton(
+                    onPressed: () {
+                      _generateWordBoard(hiddenWord: controller.text);
+                    },
+                    child: const Text('Generate Board')),
+              )
             ],
           );
         });
@@ -86,6 +101,17 @@ class _WordBoardState extends State<WordBoard> {
 
     // User releases the touch/drag -> Check the selected word
     workBoardViewModel.checkWord();
+  }
+
+  void _generateWordBoard({String hiddenWord = defaultHiddenWord}) {
+    final double screenWidth = getScreenWidth(context);
+    final double boardWidth = (screenWidth - wordBoardMargin * 2);
+    final double cellSize = boardWidth / wordBoardColumn;
+    workBoardViewModel.init(
+        boardRow: wordBoardRow,
+        boardColumn: wordBoardColumn,
+        cellSize: cellSize,
+        hiddenWord: hiddenWord.toUpperCase());
   }
 }
 

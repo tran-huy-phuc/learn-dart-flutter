@@ -44,20 +44,25 @@ class _WordBoardState extends State<WordBoard> {
           final double cellWidth = boardWidth / wordBoardColumn;
           final double boardHeight = cellWidth * wordBoardRow;
 
-          return GestureDetector(
-              onPanStart: _onPanStart,
-              onPanUpdate: _onPanUpdate,
-              onPanEnd: _onPanEnd,
-              child: CustomPaint(
-                size: Size(boardWidth, boardHeight),
-                painter: WordBoardPainter(
-                  boardWidth: boardWidth,
-                  boardHeight: boardHeight,
-                  wordBoardViewModel: workBoardViewModel,
-                  // highlightedCells: {},
-                  // path: []
-                ),
-              ));
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              GestureDetector(
+                  onPanStart: _onPanStart,
+                  onPanUpdate: _onPanUpdate,
+                  onPanEnd: _onPanEnd,
+                  child: CustomPaint(
+                    size: Size(boardWidth, boardHeight),
+                    painter: WordBoardPainter(
+                      boardWidth: boardWidth,
+                      boardHeight: boardHeight,
+                      wordBoardViewModel: workBoardViewModel,
+                      // highlightedCells: {},
+                      // path: []
+                    ),
+                  )),
+            ],
+          );
         });
   }
 
@@ -111,9 +116,13 @@ class WordBoardPainter extends CustomPainter {
       ..style = PaintingStyle.stroke;
     Paint highlightedCellPaint = Paint()..color = Colors.yellow;
     Paint connectPathPaint = Paint()
-      ..color = Colors.red
-      ..strokeWidth = 4
+      ..color = Colors.green
+      ..strokeWidth = connectedPathWidth
       ..style = PaintingStyle.stroke;
+
+    Paint connectCirclePaint = Paint()
+      ..color = Colors.green
+      ..style = PaintingStyle.fill;
 
     final cellSize = size.width / wordBoardColumn;
 
@@ -130,8 +139,8 @@ class WordBoardPainter extends CustomPainter {
             row * cellSize + cellMargin,
             cellSize - cellMargin * 2,
             cellSize - cellMargin * 2);
-        RRect cellRRect =
-            RRect.fromRectAndRadius(cellRect, const Radius.circular(12));
+        RRect cellRRect = RRect.fromRectAndRadius(
+            cellRect, const Radius.circular(cellBorderRadius));
 
         // Highlight cell if the cell is in highlightedCells
         if (wordBoardViewModel.selectedCells.contains(currentCell)) {
@@ -164,14 +173,28 @@ class WordBoardPainter extends CustomPainter {
     }
 
     // Draw connect path
-    // if (path.isNotEmpty) {
-    //   Path pathLine = Path()..moveTo(path[0].dx, path[0].dy);
-    //   for (int i = 1; i < path.length; i++) {
-    //     pathLine.lineTo(path[i].dx, path[i].dy);
-    //   }
-    //
-    //   canvas.drawPath(pathLine, connectPathPaint);
-    // }
+    if (wordBoardViewModel.selectedCells.isNotEmpty) {
+      double cellCenterX =
+          wordBoardViewModel.selectedCells[0].column * cellSize + cellSize / 2;
+      double cellCenterY =
+          wordBoardViewModel.selectedCells[0].row * cellSize + cellSize / 2;
+      // Draw a circle at the center of the cell
+      canvas.drawCircle(Offset(cellCenterX, cellCenterY), connectedDotRadius,
+          connectCirclePaint);
+      Path pathLine = Path()..moveTo(cellCenterX, cellCenterY);
+      for (int i = 1; i < wordBoardViewModel.selectedCells.length; i++) {
+        cellCenterX = wordBoardViewModel.selectedCells[i].column * cellSize +
+            cellSize / 2;
+        cellCenterY =
+            wordBoardViewModel.selectedCells[i].row * cellSize + cellSize / 2;
+        // Draw a circle at the center of the cell
+        canvas.drawCircle(Offset(cellCenterX, cellCenterY), connectedDotRadius,
+            connectCirclePaint);
+        pathLine.lineTo(cellCenterX, cellCenterY);
+      }
+
+      canvas.drawPath(pathLine, connectPathPaint);
+    }
   }
 
   @override

@@ -35,6 +35,8 @@ class WordBoardViewModel extends ChangeNotifier {
     int row = (touchPosition.dy / cellSize).floor();
     int column = (touchPosition.dx / cellSize).floor();
     int index = row * boardColumn + column;
+
+    // Only check when the index is invalid
     if (index >= 0 || index < row * column) {
       if (index < boardRow * boardColumn) {
         WordBoardCell currentCell = WordBoardCell(
@@ -42,6 +44,9 @@ class WordBoardViewModel extends ChangeNotifier {
           column: column,
         )..letter = _cells[index].letter;
 
+        // TODO: If User moves the pointer backward -> Update selected cells
+
+        // Add the current cell to selected list if it has not been added yet
         if (!selectedCells.contains(currentCell)) {
           selectedCells.add(currentCell);
         }

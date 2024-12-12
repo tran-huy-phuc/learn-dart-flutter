@@ -76,8 +76,8 @@ class _WordBoardState extends State<WordBoard> {
   }
 
   void _onPanEnd(DragEndDetails details) {
-    RenderBox box = context.findRenderObject() as RenderBox;
-    Offset localPosition = box.globalToLocal(details.globalPosition);
+    // RenderBox box = context.findRenderObject() as RenderBox;
+    // Offset localPosition = box.globalToLocal(details.globalPosition);
 
     // User releases the touch/drag -> Check the selected word
     workBoardViewModel.checkWord();
@@ -126,15 +126,21 @@ class WordBoardPainter extends CustomPainter {
             WordBoardCell(row: row, column: column)..letter = letter;
 
         Rect cellRect = Rect.fromLTWH(
-            column * cellSize, row * cellSize, cellSize, cellSize);
+            column * cellSize + cellMargin,
+            row * cellSize + cellMargin,
+            cellSize - cellMargin * 2,
+            cellSize - cellMargin * 2);
+        RRect cellRRect =
+            RRect.fromRectAndRadius(cellRect, const Radius.circular(12));
 
         // Highlight cell if the cell is in highlightedCells
         if (wordBoardViewModel.selectedCells.contains(currentCell)) {
-          canvas.drawRect(cellRect, highlightedCellPaint);
+          canvas.drawRRect(cellRRect, highlightedCellPaint);
         } else {
-          canvas.drawRect(cellRect, cellPaint);
+          // canvas.drawRect(cellRect, cellPaint);
+          canvas.drawRRect(cellRRect, cellPaint);
         }
-        canvas.drawRect(cellRect, cellBorderPaint);
+        canvas.drawRRect(cellRRect, cellBorderPaint);
 
         // Draw the letter
         TextPainter textPainter = TextPainter(

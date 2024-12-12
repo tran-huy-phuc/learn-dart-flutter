@@ -35,17 +35,19 @@ class WordBoardViewModel extends ChangeNotifier {
     int row = (touchPosition.dy / cellSize).floor();
     int column = (touchPosition.dx / cellSize).floor();
     int index = row * boardColumn + column;
-    if (index < boardRow * boardColumn) {
-      WordBoardCell currentCell = WordBoardCell(
-        row: row,
-        column: column,
-      )..letter = _cells[index].letter;
+    if (index >= 0 || index < row * column) {
+      if (index < boardRow * boardColumn) {
+        WordBoardCell currentCell = WordBoardCell(
+          row: row,
+          column: column,
+        )..letter = _cells[index].letter;
 
-      if (!selectedCells.contains(currentCell)) {
-        selectedCells.add(currentCell);
+        if (!selectedCells.contains(currentCell)) {
+          selectedCells.add(currentCell);
+        }
+
+        notifyListeners();
       }
-
-      notifyListeners();
     }
     print('Selected cells count: ${selectedCells.length}');
   }
@@ -53,8 +55,8 @@ class WordBoardViewModel extends ChangeNotifier {
   void checkWord() {
     final String selectedWord = selectedCells
         .map((cell) {
-      return cell.letter;
-    })
+          return cell.letter;
+        })
         .toList()
         .join('');
 

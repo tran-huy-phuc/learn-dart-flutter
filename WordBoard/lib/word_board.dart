@@ -87,6 +87,7 @@ class _WordBoardState extends State<WordBoard> {
         });
   }
 
+  /// User starts to tap on the board
   void _onPanStart(DragStartDetails details) {
     RenderBox box = context.findRenderObject() as RenderBox;
     Offset localPosition = box.globalToLocal(details.globalPosition);
@@ -94,6 +95,7 @@ class _WordBoardState extends State<WordBoard> {
     workBoardViewModel.updateSelectedCells(localPosition);
   }
 
+  /// User moves across the cell(s)
   void _onPanUpdate(DragUpdateDetails details) {
     RenderBox box = context.findRenderObject() as RenderBox;
     Offset localPosition = box.globalToLocal(details.globalPosition);
@@ -101,6 +103,7 @@ class _WordBoardState extends State<WordBoard> {
     workBoardViewModel.updateSelectedCells(localPosition);
   }
 
+  /// User releases the touch
   void _onPanEnd(DragEndDetails details) {
     // RenderBox box = context.findRenderObject() as RenderBox;
     // Offset localPosition = box.globalToLocal(details.globalPosition);
@@ -193,7 +196,7 @@ class WordBoardPainter extends CustomPainter {
               style: TextStyle(
                 color: Colors.black,
                 fontSize: cellSize * 0.45,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w400,
               ),
             ),
             textAlign: TextAlign.center,

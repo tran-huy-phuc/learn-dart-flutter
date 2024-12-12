@@ -16,6 +16,7 @@ class _WordBoardState extends State<WordBoard> {
   WordBoardViewModel workBoardViewModel = WordBoardViewModel();
   TextEditingController controller =
       TextEditingController(text: defaultHiddenWord);
+  double scale = 0;
 
   @override
   void initState() {
@@ -44,20 +45,24 @@ class _WordBoardState extends State<WordBoard> {
             mainAxisSize: MainAxisSize.min,
             children: [
               // const SizedBox(height: 20,),
-              GestureDetector(
-                  onPanStart: _onPanStart,
-                  onPanUpdate: _onPanUpdate,
-                  onPanEnd: _onPanEnd,
-                  child: CustomPaint(
-                    size: Size(boardWidth, boardHeight),
-                    painter: WordBoardPainter(
-                      boardWidth: boardWidth,
-                      boardHeight: boardHeight,
-                      wordBoardViewModel: workBoardViewModel,
-                      // highlightedCells: {},
-                      // path: []
-                    ),
-                  )),
+              AnimatedScale(
+                scale: scale,
+                duration: const Duration(seconds: 1),
+                child: GestureDetector(
+                    onPanStart: _onPanStart,
+                    onPanUpdate: _onPanUpdate,
+                    onPanEnd: _onPanEnd,
+                    child: CustomPaint(
+                      size: Size(boardWidth, boardHeight),
+                      painter: WordBoardPainter(
+                        boardWidth: boardWidth,
+                        boardHeight: boardHeight,
+                        wordBoardViewModel: workBoardViewModel,
+                        // highlightedCells: {},
+                        // path: []
+                      ),
+                    )),
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: TextField(
@@ -103,15 +108,23 @@ class _WordBoardState extends State<WordBoard> {
     workBoardViewModel.checkWord();
   }
 
-  void _generateWordBoard({String hiddenWord = defaultHiddenWord}) {
+  Future<void> _generateWordBoard(
+      {String hiddenWord = defaultHiddenWord}) async {
+    setState(() {
+      scale = 0;
+    });
     final double screenWidth = getScreenWidth(context);
     final double boardWidth = (screenWidth - wordBoardMargin * 2);
     final double cellSize = boardWidth / wordBoardColumn;
+    await Future.delayed(const Duration(milliseconds: 500));
     workBoardViewModel.init(
         boardRow: wordBoardRow,
         boardColumn: wordBoardColumn,
         cellSize: cellSize,
         hiddenWord: hiddenWord.toUpperCase());
+    setState(() {
+      scale = 1;
+    });
   }
 }
 

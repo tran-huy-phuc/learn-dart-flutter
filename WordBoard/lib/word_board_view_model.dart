@@ -7,16 +7,38 @@ import 'package:wordboard/utils.dart';
 import 'package:wordboard/word_board_cell.dart';
 
 class WordBoardViewModel extends ChangeNotifier {
-  final List<WordBoardCell> _wordBoardCells = [];
+  final List<WordBoardCell> _cells = [];
+  late double cellSize;
+  late int boardRow;
+  late int boardColumn;
 
-  List<WordBoardCell> get wordBoardCells => _wordBoardCells;
+  List<WordBoardCell> get cells => _cells;
+  List<WordBoardCell> selectedCells = [];
 
   void init(
       {required int boardRow,
       required int boardColumn,
+      required double cellSize,
       required String hiddenWord}) {
+    this.cellSize = cellSize;
+    this.boardRow = boardRow;
+    this.boardColumn = boardColumn;
     _createWordBoardCells(
         boardRow: boardRow, boardColumn: boardColumn, hiddenWord: hiddenWord);
+    notifyListeners();
+  }
+
+  void updateSelectedCells(Offset touchPosition) {
+    // Determine which row and column the touch pointer is
+    int row = (touchPosition.dy / cellSize).floor();
+    int column = (touchPosition.dx / cellSize).floor();
+    int index = row * boardColumn + column;
+    WordBoardCell selectedCell = WordBoardCell(
+      row: row,
+      column: column,
+    )..letter = _cells[index].letter;
+    selectedCells.add(selectedCell);
+    print('Selected cells count: ${selectedCells.length}');
   }
 
   void _createWordBoardCells(
@@ -35,7 +57,7 @@ class WordBoardViewModel extends ChangeNotifier {
   }) {
     for (int r = 0; r < boardRow; r++) {
       for (int c = 0; c < boardColumn; c++) {
-        _wordBoardCells.add(WordBoardCell(row: r, column: c));
+        _cells.add(WordBoardCell(row: r, column: c));
       }
     }
   }
@@ -49,13 +71,12 @@ class WordBoardViewModel extends ChangeNotifier {
     WordBoardCell? currentCell;
 
     hiddenWord.split('').forEach((letter) {
-      print('Letter ---> $letter');
       do {
         WordBoardCell? randomCell =
             getRandomNonVisitedCell(boardRow, boardColumn, currentCell);
         if (randomCell != null) {
           int index = randomCell.row * boardColumn + randomCell.column;
-          _wordBoardCells[index].letter = letter;
+          _cells[index].letter = letter;
 
           visitedCells.push(randomCell);
           currentCell = randomCell;
@@ -64,7 +85,6 @@ class WordBoardViewModel extends ChangeNotifier {
           break;
         }
       } while (visitedCells.length < hiddenWord.length);
-      print('Visited count: ${visitedCells.length}');
     });
   }
 
@@ -73,11 +93,11 @@ class WordBoardViewModel extends ChangeNotifier {
     required int boardRow,
     required int boardColumn,
   }) {
-    for (int i = 0; i < wordBoardCells.length; i++) {
-      if (wordBoardCells[i].letter == null) {
-        wordBoardCells[i] = WordBoardCell(
-          row: wordBoardCells[i].row,
-          column: wordBoardCells[i].column,
+    for (int i = 0; i < cells.length; i++) {
+      if (cells[i].letter == null) {
+        cells[i] = WordBoardCell(
+          row: cells[i].row,
+          column: cells[i].column,
         )..letter = getRandomLetter();
       }
     }
@@ -92,7 +112,7 @@ class WordBoardViewModel extends ChangeNotifier {
     if (currentCell == null) {
       int randomRow = random.nextInt(boardRow);
       int randomColumn = random.nextInt(boardColumn);
-      return _wordBoardCells[randomRow * boardColumn + randomColumn];
+      return _cells[randomRow * boardColumn + randomColumn];
     }
 
     // If currentCell is not null -> Find adjacent available cell
@@ -124,24 +144,19 @@ class WordBoardViewModel extends ChangeNotifier {
       // Check the adjacent cell if it was filled by a letter. If not, we can
       // use it. Otherwise, we need to try another
       if (adjacentCellIndex >= 0 &&
-          adjacentCellIndex < _wordBoardCells.length &&
-          _wordBoardCells[adjacentCellIndex].letter == null) {
+          adjacentCellIndex < _cells.length &&
+          _cells[adjacentCellIndex].letter == null) {
         adjacentCell = WordBoardCell(
-          column: _wordBoardCells[adjacentCellIndex].column,
-          row: _wordBoardCells[adjacentCellIndex].row
-        );
+            column: _cells[adjacentCellIndex].column,
+            row: _cells[adjacentCellIndex].row);
 
         return adjacentCell;
       }
-      // Remove the direction so next time we only try with other directions
-      // else {
-      //   directions.remove(randomDirection);
-      //   print(directions);
-      // }
       currentTry++;
     } while (currentTry < maxTry && adjacentCell == null);
 
     // There is no available adjacent cell -> Should try another path
+    // throw 'There is no available adjacent cell -> Should try another path';
     return null;
   }
 }

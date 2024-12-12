@@ -135,10 +135,6 @@ class _WordBoardState extends State<WordBoard> {
 class WordBoardPainter extends CustomPainter {
   final double boardWidth;
   final double boardHeight;
-
-  // final List<WordBoardCell> cells;
-  // final Set<int> highlightedCells;
-  // final List<Offset> path;
   final WordBoardViewModel wordBoardViewModel;
 
   WordBoardPainter({
@@ -152,22 +148,18 @@ class WordBoardPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    final cellSize = size.width / wordBoardColumn;
+    drawConnectionPath(canvas, cellSize);
+    drawBoardCells(canvas, cellSize);
+  }
+
+  void drawBoardCells(Canvas canvas, double cellSize) {
     Paint cellPaint = Paint()..color = Colors.white;
     Paint cellBorderPaint = Paint()
       ..color = Colors.black45
       ..strokeWidth = 1
       ..style = PaintingStyle.stroke;
     Paint highlightedCellPaint = Paint()..color = Colors.yellow;
-    Paint connectPathPaint = Paint()
-      ..color = Colors.green
-      ..strokeWidth = connectedPathWidth
-      ..style = PaintingStyle.stroke;
-
-    Paint connectCirclePaint = Paint()
-      ..color = Colors.green
-      ..style = PaintingStyle.fill;
-
-    final cellSize = size.width / wordBoardColumn;
 
     // Draw the board's cells
     for (int row = 0; row < wordBoardRow; row++) {
@@ -175,7 +167,7 @@ class WordBoardPainter extends CustomPainter {
         int index = row * wordBoardColumn + column;
         final String letter = wordBoardViewModel.cells[index].letter ?? '';
         final WordBoardCell currentCell =
-            WordBoardCell(row: row, column: column)..letter = letter;
+        WordBoardCell(row: row, column: column)..letter = letter;
 
         Rect cellRect = Rect.fromLTWH(
             column * cellSize + cellMargin,
@@ -189,7 +181,6 @@ class WordBoardPainter extends CustomPainter {
         if (wordBoardViewModel.selectedCells.contains(currentCell)) {
           canvas.drawRRect(cellRRect, highlightedCellPaint);
         } else {
-          // canvas.drawRect(cellRect, cellPaint);
           canvas.drawRRect(cellRRect, cellPaint);
         }
         canvas.drawRRect(cellRRect, cellBorderPaint);
@@ -214,7 +205,17 @@ class WordBoardPainter extends CustomPainter {
         textPainter.paint(canvas, textOffset);
       }
     }
+  }
 
+  void drawConnectionPath(Canvas canvas, double cellSize) {
+    Paint connectPathPaint = Paint()
+      ..color = Colors.green
+      ..strokeWidth = connectedPathWidth
+      ..style = PaintingStyle.stroke;
+
+    Paint connectCirclePaint = Paint()
+      ..color = Colors.green
+      ..style = PaintingStyle.fill;
     // Draw connect path
     if (wordBoardViewModel.selectedCells.isNotEmpty) {
       double cellCenterX =

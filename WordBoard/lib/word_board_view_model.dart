@@ -1,11 +1,10 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:wordboard/constants.dart';
 import 'package:wordboard/direction.dart';
+import 'package:wordboard/stack.dart' as stack;
 import 'package:wordboard/utils.dart';
 import 'package:wordboard/word_board_cell.dart';
-import 'package:wordboard/stack.dart' as stack;
 
 class WordBoardViewModel extends ChangeNotifier {
   final List<WordBoardCell> _wordBoardCells = [];
@@ -74,7 +73,6 @@ class WordBoardViewModel extends ChangeNotifier {
     required int boardRow,
     required int boardColumn,
   }) {
-    Random random = Random();
     for (int i = 0; i < wordBoardCells.length; i++) {
       if (wordBoardCells[i].letter == null) {
         wordBoardCells[i] = WordBoardCell(
@@ -83,18 +81,6 @@ class WordBoardViewModel extends ChangeNotifier {
         )..letter = getRandomLetter();
       }
     }
-  }
-
-  bool _doesWordFit(int rows, int cols, int startRow, int startCol, int dx,
-      int dy, int wordLength) {
-    int endRow = startRow + (wordLength - 1) * dx;
-    int endCol = startCol + (wordLength - 1) * dy;
-
-    if (endRow < 0 || endRow >= rows || endCol < 0 || endCol >= cols) {
-      return false;
-    }
-
-    return true;
   }
 
   /// Get random & non-visited cell (to fill next letter)

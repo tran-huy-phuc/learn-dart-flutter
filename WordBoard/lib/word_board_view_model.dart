@@ -34,6 +34,10 @@ class WordBoardViewModel extends ChangeNotifier {
     // Determine which row and column the touch pointer is
     int row = (touchPosition.dy / cellSize).floor();
     int column = (touchPosition.dx / cellSize).floor();
+    // Drag outside the board
+    if (row < 0 || row >= boardRow || column < 0 || column >= boardColumn) {
+      return;
+    }
     int index = row * boardColumn + column;
 
     // Only check when the index is invalid

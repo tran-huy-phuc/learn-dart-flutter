@@ -107,6 +107,10 @@ class WordBoardViewModel extends ChangeNotifier {
     WordBoardCell? currentCell;
 
     hiddenWord.split('').forEach((letter) {
+      // Sometimes there is no available cell to move and fill next letter.
+      // In that case, better to reset the board.
+      // To handle the reset, we try to find the next cell 10 times
+      int tryCount = 0;
       do {
         WordBoardCell? randomCell =
             getRandomNonVisitedCell(boardRow, boardColumn, currentCell);
@@ -119,8 +123,23 @@ class WordBoardViewModel extends ChangeNotifier {
 
           // Stop do...while loop when a cell is determined
           break;
+        } else {
+          print("Random cell: $randomCell");
+          tryCount++;
+          print("Try count: $tryCount");
         }
-      } while (visitedCells.length < hiddenWord.length);
+      } while (visitedCells.length < hiddenWord.length && tryCount < 10);
+
+      // If after trying 10 times and still can not find the next cell to move,
+      // reset the board
+      if (tryCount >= 10) {
+        // Initial the board again
+        init(
+            boardRow: boardRow,
+            boardColumn: boardColumn,
+            cellSize: cellSize,
+            hiddenWord: hiddenWord);
+      }
     });
   }
 

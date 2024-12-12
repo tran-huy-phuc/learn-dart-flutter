@@ -11,6 +11,7 @@ class WordBoardViewModel extends ChangeNotifier {
   late double cellSize;
   late int boardRow;
   late int boardColumn;
+  late String hiddenWord;
 
   List<WordBoardCell> get cells => _cells;
   List<WordBoardCell> selectedCells = [];
@@ -23,6 +24,7 @@ class WordBoardViewModel extends ChangeNotifier {
     this.cellSize = cellSize;
     this.boardRow = boardRow;
     this.boardColumn = boardColumn;
+    this.hiddenWord = hiddenWord;
     _createWordBoardCells(
         boardRow: boardRow, boardColumn: boardColumn, hiddenWord: hiddenWord);
     notifyListeners();
@@ -33,12 +35,34 @@ class WordBoardViewModel extends ChangeNotifier {
     int row = (touchPosition.dy / cellSize).floor();
     int column = (touchPosition.dx / cellSize).floor();
     int index = row * boardColumn + column;
-    WordBoardCell selectedCell = WordBoardCell(
-      row: row,
-      column: column,
-    )..letter = _cells[index].letter;
-    selectedCells.add(selectedCell);
+    if (index < boardRow * boardColumn) {
+      WordBoardCell currentCell = WordBoardCell(
+        row: row,
+        column: column,
+      )..letter = _cells[index].letter;
+
+      if (!selectedCells.contains(currentCell)) {
+        selectedCells.add(currentCell);
+      }
+
+      notifyListeners();
+    }
     print('Selected cells count: ${selectedCells.length}');
+  }
+
+  void checkWord() {
+    final String selectedWord = selectedCells
+        .map((cell) {
+      return cell.letter;
+    })
+        .toList()
+        .join('');
+
+    print(selectedWord == hiddenWord);
+    if (selectedWord != hiddenWord) {
+      selectedCells.clear();
+      notifyListeners();
+    }
   }
 
   void _createWordBoardCells(
@@ -93,11 +117,11 @@ class WordBoardViewModel extends ChangeNotifier {
     required int boardRow,
     required int boardColumn,
   }) {
-    for (int i = 0; i < cells.length; i++) {
-      if (cells[i].letter == null) {
-        cells[i] = WordBoardCell(
-          row: cells[i].row,
-          column: cells[i].column,
+    for (int i = 0; i < _cells.length; i++) {
+      if (_cells[i].letter == null) {
+        _cells[i] = WordBoardCell(
+          row: _cells[i].row,
+          column: _cells[i].column,
         )..letter = getRandomLetter();
       }
     }

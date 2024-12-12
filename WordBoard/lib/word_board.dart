@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wordboard/constants.dart';
 import 'package:wordboard/utils.dart';
+import 'package:wordboard/word_board_cell.dart';
 import 'package:wordboard/word_board_view_model.dart';
 
 class WordBoard extends StatefulWidget {
@@ -64,21 +65,22 @@ class _WordBoardState extends State<WordBoard> {
     RenderBox box = context.findRenderObject() as RenderBox;
     Offset localPosition = box.globalToLocal(details.globalPosition);
 
-    print(localPosition);
+    workBoardViewModel.updateSelectedCells(localPosition);
   }
 
   void _onPanUpdate(DragUpdateDetails details) {
     RenderBox box = context.findRenderObject() as RenderBox;
     Offset localPosition = box.globalToLocal(details.globalPosition);
 
-    print(localPosition);
+    workBoardViewModel.updateSelectedCells(localPosition);
   }
 
   void _onPanEnd(DragEndDetails details) {
     RenderBox box = context.findRenderObject() as RenderBox;
     Offset localPosition = box.globalToLocal(details.globalPosition);
 
-    print(localPosition);
+    // User releases the touch/drag -> Check the selected word
+    workBoardViewModel.checkWord();
   }
 }
 
@@ -119,12 +121,15 @@ class WordBoardPainter extends CustomPainter {
     for (int row = 0; row < wordBoardRow; row++) {
       for (int column = 0; column < wordBoardColumn; column++) {
         int index = row * wordBoardColumn + column;
+        final String letter = wordBoardViewModel.cells[index].letter ?? '';
+        final WordBoardCell currentCell =
+            WordBoardCell(row: row, column: column)..letter = letter;
 
         Rect cellRect = Rect.fromLTWH(
             column * cellSize, row * cellSize, cellSize, cellSize);
 
         // Highlight cell if the cell is in highlightedCells
-        if (wordBoardViewModel.selectedCells.contains(index)) {
+        if (wordBoardViewModel.selectedCells.contains(currentCell)) {
           canvas.drawRect(cellRect, highlightedCellPaint);
         } else {
           canvas.drawRect(cellRect, cellPaint);
@@ -134,7 +139,7 @@ class WordBoardPainter extends CustomPainter {
         // Draw the letter
         TextPainter textPainter = TextPainter(
             text: TextSpan(
-              text: wordBoardViewModel.cells[index].letter,
+              text: letter,
               style: TextStyle(
                 color: Colors.black,
                 fontSize: cellSize * 0.5,

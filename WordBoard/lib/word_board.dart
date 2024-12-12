@@ -104,14 +104,16 @@ class _WordBoardState extends State<WordBoard> {
   }
 
   /// User releases the touch
-  void _onPanEnd(DragEndDetails details) {
+  Future<void> _onPanEnd(DragEndDetails details) async {
     // RenderBox box = context.findRenderObject() as RenderBox;
     // Offset localPosition = box.globalToLocal(details.globalPosition);
 
     // User releases the touch/drag -> Check the selected word
-    bool isCorrect = workBoardViewModel.checkWord();
+    bool isCorrect = await workBoardViewModel.checkWord();
     if (isCorrect) {
-      showConfettiEffect(context);
+      if (mounted) {
+        showConfettiEffect(context);
+      }
     }
   }
 
@@ -163,7 +165,9 @@ class WordBoardPainter extends CustomPainter {
       ..color = Colors.black45
       ..strokeWidth = 1
       ..style = PaintingStyle.stroke;
-    Paint highlightedCellPaint = Paint()..color = Colors.yellow;
+    Paint highlightedCellPaint = Paint()
+      ..color =
+          wordBoardViewModel.isShowingWrongWord ? Colors.red : Colors.yellow;
 
     // Draw the board's cells
     for (int row = 0; row < wordBoardRow; row++) {
@@ -171,13 +175,14 @@ class WordBoardPainter extends CustomPainter {
         int index = row * wordBoardColumn + column;
         final String letter = wordBoardViewModel.cells[index].letter ?? '';
         final WordBoardCell currentCell =
-        WordBoardCell(row: row, column: column)..letter = letter;
+            WordBoardCell(row: row, column: column)..letter = letter;
 
+        double cellRectSize = wordBoardViewModel.isShowingWrongWord ? cellSize - cellMargin : cellSize - cellMargin * 2;
         Rect cellRect = Rect.fromLTWH(
             column * cellSize + cellMargin,
             row * cellSize + cellMargin,
-            cellSize - cellMargin * 2,
-            cellSize - cellMargin * 2);
+            cellRectSize,
+            cellRectSize);
         RRect cellRRect = RRect.fromRectAndRadius(
             cellRect, const Radius.circular(cellBorderRadius));
 

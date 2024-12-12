@@ -16,6 +16,9 @@ class WordBoardViewModel extends ChangeNotifier {
   List<WordBoardCell> get cells => _cells;
   List<WordBoardCell> selectedCells = [];
 
+  // This flag is used to draw the wrong word state on the UI
+  bool isShowingWrongWord = false;
+
   void init(
       {required int boardRow,
       required int boardColumn,
@@ -60,7 +63,7 @@ class WordBoardViewModel extends ChangeNotifier {
     }
   }
 
-  bool checkWord() {
+  Future<bool> checkWord() async {
     final String selectedWord = selectedCells
         .map((cell) {
           return cell.letter;
@@ -69,10 +72,25 @@ class WordBoardViewModel extends ChangeNotifier {
         .join('');
 
     if (selectedWord != hiddenWord) {
-      selectedCells.clear();
-      notifyListeners();
+      // Update UI for wrong word state
+       isShowingWrongWord = true;
+       notifyListeners();
+       // Wait 1 seconds before reset the board
+       await Future.delayed(const Duration(seconds: 1));
+       _clearSelectedCells();
+       return false;
+    } else {
+      // Wait 0.5 seconds before reset the board
+      await Future.delayed(const Duration(milliseconds: 500));
+      _clearSelectedCells();
+      return true;
     }
-    return selectedWord == hiddenWord;
+  }
+
+  void _clearSelectedCells() {
+    selectedCells.clear();
+    isShowingWrongWord = false;
+    notifyListeners();
   }
 
   void _createWordBoardCells(

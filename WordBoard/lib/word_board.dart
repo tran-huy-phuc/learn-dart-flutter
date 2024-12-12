@@ -200,8 +200,8 @@ class WordBoardPainter extends CustomPainter {
               text: letter,
               style: TextStyle(
                 color: Colors.black,
-                fontSize: cellSize * 0.5,
-                fontWeight: FontWeight.bold,
+                fontSize: cellSize * 0.45,
+                fontWeight: FontWeight.w500,
               ),
             ),
             textAlign: TextAlign.center,

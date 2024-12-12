@@ -6,8 +6,14 @@ class WordBoardGame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: WordBoard()
+    return const Material(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          WordBoard()
+        ],
+      )
     );
   }
 }

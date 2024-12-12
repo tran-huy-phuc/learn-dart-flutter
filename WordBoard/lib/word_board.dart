@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:wordboard/constants.dart';
 import 'package:wordboard/utils.dart';
+import 'package:wordboard/word_board_cell.dart';
+import 'package:wordboard/word_board_view_model.dart';
 
 class WordBoard extends StatefulWidget {
   const WordBoard({Key? key}) : super(key: key);
@@ -10,12 +12,16 @@ class WordBoard extends StatefulWidget {
 }
 
 class _WordBoardState extends State<WordBoard> {
-  late List<String> letters;
+  // late List<String> letters;
+  WordBoardViewModel workBoardViewModel = WordBoardViewModel();
 
   @override
   void initState() {
     super.initState();
-    letters = List.filled(wordBoardRow * wordBoardColumn, "A");
+    workBoardViewModel.init(
+        boardRow: wordBoardRow,
+        boardColumn: wordBoardColumn,
+        hiddenWord: 'hello'.toUpperCase());
   }
 
   @override
@@ -29,7 +35,7 @@ class _WordBoardState extends State<WordBoard> {
       painter: WordBoardPainter(
           boardWidth: boardWidth,
           boardHeight: boardHeight,
-          letters: letters,
+          cells: workBoardViewModel.wordBoardCells,
           highlightedCells: {},
           path: []),
     );
@@ -39,14 +45,14 @@ class _WordBoardState extends State<WordBoard> {
 class WordBoardPainter extends CustomPainter {
   final double boardWidth;
   final double boardHeight;
-  final List<String> letters;
+  final List<WordBoardCell> cells;
   final Set<int> highlightedCells;
   final List<Offset> path;
 
   WordBoardPainter(
       {required this.boardWidth,
       required this.boardHeight,
-      required this.letters,
+      required this.cells,
       required this.highlightedCells,
       required this.path});
 
@@ -77,14 +83,14 @@ class WordBoardPainter extends CustomPainter {
         if (highlightedCells.contains(index)) {
           canvas.drawRect(cellRect, highlightedCellPaint);
         } else {
-          canvas.drawRect(cellRect, cellPaint);
+            canvas.drawRect(cellRect, cellPaint);
         }
         canvas.drawRect(cellRect, cellBorderPaint);
 
         // Draw the letter
         TextPainter textPainter = TextPainter(
             text: TextSpan(
-              text: letters[index],
+              text: cells[index].letter,
               style: TextStyle(
                 color: Colors.black,
                 fontSize: cellSize * 0.5,

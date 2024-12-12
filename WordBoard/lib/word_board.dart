@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wordboard/confetti.dart';
 import 'package:wordboard/constants.dart';
 import 'package:wordboard/utils.dart';
 import 'package:wordboard/word_board_cell.dart';
@@ -105,7 +106,10 @@ class _WordBoardState extends State<WordBoard> {
     // Offset localPosition = box.globalToLocal(details.globalPosition);
 
     // User releases the touch/drag -> Check the selected word
-    workBoardViewModel.checkWord();
+    bool isCorrect = workBoardViewModel.checkWord();
+    if (isCorrect) {
+      showConfettiEffect(context);
+    }
   }
 
   Future<void> _generateWordBoard(
@@ -116,7 +120,7 @@ class _WordBoardState extends State<WordBoard> {
     final double screenWidth = getScreenWidth(context);
     final double boardWidth = (screenWidth - wordBoardMargin * 2);
     final double cellSize = boardWidth / wordBoardColumn;
-    await Future.delayed(const Duration(milliseconds: 500));
+    await Future.delayed(const Duration(milliseconds: 300));
     workBoardViewModel.init(
         boardRow: wordBoardRow,
         boardColumn: wordBoardColumn,

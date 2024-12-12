@@ -57,7 +57,7 @@ class WordBoardViewModel extends ChangeNotifier {
     print('Selected cells count: ${selectedCells.length}');
   }
 
-  void checkWord() {
+  bool checkWord() {
     final String selectedWord = selectedCells
         .map((cell) {
           return cell.letter;
@@ -70,6 +70,7 @@ class WordBoardViewModel extends ChangeNotifier {
       selectedCells.clear();
       notifyListeners();
     }
+    return selectedWord == hiddenWord;
   }
 
   void _createWordBoardCells(

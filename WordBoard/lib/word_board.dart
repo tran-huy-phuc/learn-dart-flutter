@@ -120,6 +120,7 @@ class _WordBoardState extends State<WordBoard> {
     final double screenWidth = getScreenWidth(context);
     final double boardWidth = (screenWidth - wordBoardMargin * 2);
     final double cellSize = boardWidth / wordBoardColumn;
+    // Delay to make the scale effect visually
     await Future.delayed(const Duration(milliseconds: 300));
     workBoardViewModel.init(
         boardRow: wordBoardRow,

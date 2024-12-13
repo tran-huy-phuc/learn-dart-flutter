@@ -1,7 +1,7 @@
 class WordBoardCell {
   final int column;
   final int row;
-  String? letter; // final double posX;
+  String? letter;
 
   WordBoardCell({this.column = -1, this.row = -1});
 
@@ -18,4 +18,8 @@ class WordBoardCell {
 
   @override
   int get hashCode => column.hashCode ^ row.hashCode ^ letter.hashCode;
+  @override
+  String toString() {
+    return '($row, $column) -> $letter';
+  }
 }

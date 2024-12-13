@@ -5,6 +5,9 @@ void showConfettiEffect(BuildContext context) {
   Confetti.launch(
     context,
     options: const ConfettiOptions(
-        particleCount: 300, spread: 70, y: 0.6),
+        // TODO: Can configure these numbers in constants or settings
+        particleCount: 300,
+        spread: 70,
+        y: 0.6),
   );
 }

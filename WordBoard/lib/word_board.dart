@@ -13,7 +13,6 @@ class WordBoard extends StatefulWidget {
 }
 
 class _WordBoardState extends State<WordBoard> {
-  // late List<String> letters;
   WordBoardViewModel workBoardViewModel = WordBoardViewModel();
   TextEditingController controller =
       TextEditingController(text: defaultHiddenWord);
@@ -42,10 +41,9 @@ class _WordBoardState extends State<WordBoard> {
           final double boardHeight = cellWidth * wordBoardRow;
 
           return Column(
-            spacing: 20,
+            // spacing: 20,
             mainAxisSize: MainAxisSize.min,
             children: [
-              // const SizedBox(height: 20,),
               AnimatedScale(
                 scale: scale,
                 duration: const Duration(seconds: 1),
@@ -59,13 +57,12 @@ class _WordBoardState extends State<WordBoard> {
                         boardWidth: boardWidth,
                         boardHeight: boardHeight,
                         wordBoardViewModel: workBoardViewModel,
-                        // highlightedCells: {},
-                        // path: []
                       ),
                     )),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                 child: TextField(
                   controller: controller,
                   onChanged: (text) {},
@@ -87,7 +84,7 @@ class _WordBoardState extends State<WordBoard> {
         });
   }
 
-  /// User starts to tap on the board
+  /// User starts to tap on the board.
   void _onPanStart(DragStartDetails details) {
     RenderBox box = context.findRenderObject() as RenderBox;
     Offset localPosition = box.globalToLocal(details.globalPosition);
@@ -95,7 +92,7 @@ class _WordBoardState extends State<WordBoard> {
     workBoardViewModel.updateSelectedCells(localPosition);
   }
 
-  /// User moves across the cell(s)
+  /// User moves across the cell(s).
   void _onPanUpdate(DragUpdateDetails details) {
     RenderBox box = context.findRenderObject() as RenderBox;
     Offset localPosition = box.globalToLocal(details.globalPosition);
@@ -103,11 +100,8 @@ class _WordBoardState extends State<WordBoard> {
     workBoardViewModel.updateSelectedCells(localPosition);
   }
 
-  /// User releases the touch
+  /// User releases the touch.
   Future<void> _onPanEnd(DragEndDetails details) async {
-    // RenderBox box = context.findRenderObject() as RenderBox;
-    // Offset localPosition = box.globalToLocal(details.globalPosition);
-
     // User releases the touch/drag -> Check the selected word
     bool isCorrect = await workBoardViewModel.checkWord();
     if (isCorrect) {
@@ -125,7 +119,7 @@ class _WordBoardState extends State<WordBoard> {
     final double screenWidth = getScreenWidth(context);
     final double boardWidth = (screenWidth - wordBoardMargin * 2);
     final double cellSize = boardWidth / wordBoardColumn;
-    // Delay to make the scale effect visually
+    // Delay to visually see the scale effect.
     await Future.delayed(const Duration(milliseconds: 300));
     workBoardViewModel.init(
         boardRow: wordBoardRow,
@@ -147,9 +141,6 @@ class WordBoardPainter extends CustomPainter {
     required this.boardWidth,
     required this.boardHeight,
     required this.wordBoardViewModel,
-    // required this.cells,
-    // required this.highlightedCells,
-    // required this.path
   });
 
   @override
@@ -177,16 +168,15 @@ class WordBoardPainter extends CustomPainter {
         final WordBoardCell currentCell =
             WordBoardCell(row: row, column: column)..letter = letter;
 
-        double cellRectSize = wordBoardViewModel.isShowingWrongWord ? cellSize - cellMargin : cellSize - cellMargin * 2;
-        Rect cellRect = Rect.fromLTWH(
-            column * cellSize + cellMargin,
-            row * cellSize + cellMargin,
-            cellRectSize,
-            cellRectSize);
+        double cellRectSize = wordBoardViewModel.isShowingWrongWord
+            ? cellSize - cellMargin
+            : cellSize - cellMargin * 2;
+        Rect cellRect = Rect.fromLTWH(column * cellSize + cellMargin,
+            row * cellSize + cellMargin, cellRectSize, cellRectSize);
         RRect cellRRect = RRect.fromRectAndRadius(
             cellRect, const Radius.circular(cellBorderRadius));
 
-        // Highlight cell if the cell is in highlightedCells
+        // Highlight cell if the cell is in highlightedCells.
         if (wordBoardViewModel.selectedCells.contains(currentCell)) {
           canvas.drawRRect(cellRRect, highlightedCellPaint);
         } else {
@@ -225,13 +215,13 @@ class WordBoardPainter extends CustomPainter {
     Paint connectCirclePaint = Paint()
       ..color = Colors.green
       ..style = PaintingStyle.fill;
-    // Draw connect path
+    // Draw connect path.
     if (wordBoardViewModel.selectedCells.isNotEmpty) {
       double cellCenterX =
           wordBoardViewModel.selectedCells[0].column * cellSize + cellSize / 2;
       double cellCenterY =
           wordBoardViewModel.selectedCells[0].row * cellSize + cellSize / 2;
-      // Draw a circle at the center of the cell
+      // Draw a circle at the center of the cell.
       canvas.drawCircle(Offset(cellCenterX, cellCenterY), connectedDotRadius,
           connectCirclePaint);
       Path pathLine = Path()..moveTo(cellCenterX, cellCenterY);
@@ -240,7 +230,7 @@ class WordBoardPainter extends CustomPainter {
             cellSize / 2;
         cellCenterY =
             wordBoardViewModel.selectedCells[i].row * cellSize + cellSize / 2;
-        // Draw a circle at the center of the cell
+        // Draw a circle at the center of the cell.
         canvas.drawCircle(Offset(cellCenterX, cellCenterY), connectedDotRadius,
             connectCirclePaint);
         pathLine.lineTo(cellCenterX, cellCenterY);

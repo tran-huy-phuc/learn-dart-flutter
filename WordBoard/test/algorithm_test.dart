@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:wordboard/algorithm.dart';
-import 'package:wordboard/word_board_cell.dart';
+import 'package:wordboard/algorithm/algorithm.dart';
+import 'package:wordboard/model/word_board_cell.dart';
 
 void main() {
   group('generateHiddenWordPath', () {

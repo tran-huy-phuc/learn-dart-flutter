@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:wordboard/constants.dart';
+import 'package:wordboard/utils/constants.dart';
 
 /// Get the screen width using the [context].
 double getScreenWidth(BuildContext context) {

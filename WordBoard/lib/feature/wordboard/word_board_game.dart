@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wordboard/word_board.dart';
+import 'package:wordboard/feature/wordboard/word_board.dart';
 
 class WordBoardGame extends StatelessWidget {
   const WordBoardGame({super.key});

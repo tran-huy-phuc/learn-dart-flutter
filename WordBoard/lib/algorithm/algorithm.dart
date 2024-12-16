@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:wordboard/word_board_cell.dart';
-import 'package:wordboard/direction.dart';
+import 'package:wordboard/model/word_board_cell.dart';
+import 'package:wordboard/enum/direction.dart';
 
 /// Apply DFS (Depth first search) to build the path for hidden word.
 /// Result: A path that contains a list of cells that can be used later to fill

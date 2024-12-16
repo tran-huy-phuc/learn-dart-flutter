@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wordboard/algorithm/algorithm.dart';
-import 'package:wordboard/utils.dart';
-import 'package:wordboard/word_board_cell.dart';
+import 'package:wordboard/utils/utils.dart';
+import 'package:wordboard/model/word_board_cell.dart';
 
 class WordBoardViewModel extends ChangeNotifier {
   final List<WordBoardCell> _cells = [];

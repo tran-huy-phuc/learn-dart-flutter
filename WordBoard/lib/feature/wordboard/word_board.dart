@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:wordboard/constants.dart';
+import 'package:wordboard/feature/wordboard/word_board_view_model.dart';
+import 'package:wordboard/utils/constants.dart';
 import 'package:wordboard/effect/confetti_effect.dart';
-import 'package:wordboard/utils.dart';
-import 'package:wordboard/word_board_cell.dart';
-import 'package:wordboard/word_board_view_model.dart';
+import 'package:wordboard/utils/utils.dart';
+import 'package:wordboard/model/word_board_cell.dart';
 
 class WordBoard extends StatefulWidget {
   const WordBoard({super.key});

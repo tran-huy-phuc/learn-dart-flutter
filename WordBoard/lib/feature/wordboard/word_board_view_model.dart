@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wordboard/algorithm.dart';
+import 'package:wordboard/algorithm/algorithm.dart';
 import 'package:wordboard/utils.dart';
 import 'package:wordboard/word_board_cell.dart';
 

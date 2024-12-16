@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:wordboard/confetti.dart';
 import 'package:wordboard/constants.dart';
+import 'package:wordboard/effect/confetti_effect.dart';
 import 'package:wordboard/utils.dart';
 import 'package:wordboard/word_board_cell.dart';
 import 'package:wordboard/word_board_view_model.dart';

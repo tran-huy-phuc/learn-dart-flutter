@@ -5,5 +5,6 @@ A word board game demo:
 - Algorithm: Depth-first search (DFS)
 - Unit test
 
-# [Demo](https://github.com/thphuccoder/flutter/blob/main/WordBoard/wordboard-demo.mov)
+# Demo
+https://www.youtube.com/shorts/I1PSYcrMwiw
 
